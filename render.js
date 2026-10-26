@@ -5,7 +5,7 @@
   "use strict";
   const L = window.Logic;
   const app = document.getElementById("app");
-  const state = { data: null, season: null, open: undefined, menu: false, photos: true, font: "saira", layout: "wide" };
+  const state = { data: null, season: null, open: undefined, menu: false, tab: location.hash.slice(1) || null, photos: true, font: "saira", layout: "wide" };
 
   /* ---------- Drobnosti ---------- */
   const STAGE = { SF1: "Semifinále 1", SF2: "Semifinále 2", B3: "O 3. miesto", F: "Finále" };
@@ -133,24 +133,37 @@
     done: { status: "Skončená", chipBg: "transparent", chipFg: "#BDBDBD", chipBd: "#5A5A5A", line: "solid", dot: "#9A9A9A", dotBd: "#9A9A9A" },
     soon: { status: "Pripravujeme", chipBg: "transparent", chipFg: "#FFFFFF", chipBd: "#FFFFFF", line: "dashed", dot: "transparent", dotBd: "#FFFFFF" },
   };
+  // záložky v žltej lište: zobrazí sa vždy iba jedna sekcia, prvá je predvolená
   const NAV = {
-    live: [["#vysledky", "Výsledky"], ["#rozpis", "Rozpis"], ["#tabulka", "Tabuľka"], ["#hraci", "Hráči"], ["#playoff", "Playoff"], ["#timy", "Tímy"]],
-    done: [["#sampion", "Šampión"], ["#poradie", "Poradie"], ["#tabulka", "Tabuľka"], ["#playoff", "Playoff"], ["#vysledky", "Výsledky"], ["#hraci", "Hráči"]],
+    live: [["rozpis", "Rozpis"], ["vysledky", "Výsledky"], ["tabulka", "Tabuľka"], ["hraci", "Hráči"], ["playoff", "Playoff"], ["timy", "Tímy"]],
+    done: [["poradie", "Poradie"], ["tabulka", "Tabuľka"], ["playoff", "Playoff"], ["vysledky", "Výsledky"], ["hraci", "Hráči"]],
     soon: [],
   };
+
+  // vybraná záložka; neznáma alebo žiadna → prvá záložka sezóny
+  function tabOf(s) {
+    const tabs = NAV[s.state];
+    return tabs.some(([id]) => id === state.tab) ? state.tab : tabs.length ? tabs[0][0] : null;
+  }
 
   function header(c) {
     const s = c.cur;
     const st = STATE[s.state];
-    const nav = NAV[s.state].map(([href, txt]) => `<a href="${href}">${txt}</a>`).join("");
     return `<header class="top"><div class="wrap top-in">
       <a class="brand" href="#top" data-act="home" aria-label="FULka — domov"><img src="assets/logos/ful-mark-white.png" alt="">
         <span class="brand-name"><b>FULka</b><small>Florbalová Upece Liga</small></span></a>
       <button type="button" class="season-btn" data-act="menu" aria-expanded="${state.menu}" aria-label="Vybrať sezónu, teraz ${esc(s.name)}">
         <span class="dot" aria-hidden="true" style="background:${st.dot};border:1px ${st.line} ${st.dotBd}"></span>${esc(s.name)}${chev(14)}</button>
-      <nav class="nav" aria-label="Hlavná navigácia">${nav}
-        <button type="button" class="nav-season" data-act="menu" aria-expanded="${state.menu}">Sezóny</button></nav>
     </div></header>`;
+  }
+
+  function navBar(c) {
+    const tabs = NAV[c.cur.state];
+    if (!tabs.length) return "";
+    const cur = tabOf(c.cur);
+    const links = tabs.map(([id, txt]) =>
+      `<a href="#${id}" data-act="tab" data-id="${id}"${id === cur ? ' aria-current="page"' : ""}>${txt}</a>`).join("");
+    return `<nav class="nav" aria-label="Hlavná navigácia"><div class="wrap nav-in">${links}</div></nav>`;
   }
 
   function seasonBlurb(s, sv, T) {
@@ -462,9 +475,16 @@
     return `<section id="timy" class="sec">${secHead("Tímy", "Súpisky po drafte · C = kapitán · fotky pribúdajú postupne")}<div class="teams">${c.v.teamIds.map((id) => teamCard(id, c)).join("")}</div></section>`;
   }
 
+  // prázdna sekcia (napr. playoff ešte nie je) nenechá pod záložkou bielu plochu
+  const tabBody = (html) => html || '<p class="msg">Zatiaľ tu nič nie je.</p>';
+
   /* ---------- Prebiehajúca sezóna ---------- */
   function liveBody(c, open) {
-    return banner(c) + `<main class="wrap main">${results(c, open)}${schedule(c)}${table(c, "Tabuľka", "", liveTableNote(c))}${players(c)}${playoffLive(c)}${teams(c)}</main>`;
+    const sec = {
+      rozpis: () => schedule(c), vysledky: () => results(c, open), tabulka: () => table(c, "Tabuľka", "", liveTableNote(c)),
+      hraci: () => players(c), playoff: () => playoffLive(c), timy: () => teams(c),
+    };
+    return banner(c) + `<main class="wrap main">${tabBody(sec[tabOf(c.cur)]())}</main>`;
   }
 
   /* ---------- Skončená sezóna (archív) ---------- */
@@ -563,7 +583,11 @@
     const bar = `<div class="archive-bar"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v13H3zM8 7V4h8v3M3 12h18"></path></svg>
       <span>Archív — toto je skončená sezóna. Výsledky sa už nemenia.</span>${back}</div>`;
     const lastRound = c.v.rounds.length ? c.v.rounds[c.v.rounds.length - 1].round : 0;
-    return champion(c) + `<main class="wrap main">${bar}${placesSec(c)}${table(c, "Základná časť", lastRound ? `Tabuľka po ${lastRound}. kole` : "")}${playoffPast(c, open)}${allResults(c, open)}${topPlayers(c)}</main>`;
+    const sec = {
+      poradie: () => placesSec(c), tabulka: () => table(c, "Základná časť", lastRound ? `Tabuľka po ${lastRound}. kole` : ""),
+      playoff: () => playoffPast(c, open), vysledky: () => allResults(c, open), hraci: () => topPlayers(c),
+    };
+    return champion(c) + `<main class="wrap main">${bar}${tabBody(sec[tabOf(c.cur)]())}</main>`;
   }
 
   /* ---------- Pripravovaná sezóna ---------- */
@@ -615,7 +639,7 @@
     const body = c.cur.state === "live" ? liveBody(c, open) : c.cur.state === "done" ? pastBody(c, open) : futureBody(c);
     const focus = document.activeElement && document.activeElement.closest && document.activeElement.closest("[data-act]");
     const key = focus ? `[data-act="${focus.dataset.act}"]${focus.dataset.id ? `[data-id="${CSS.escape(focus.dataset.id)}"]` : ""}` : null;
-    app.innerHTML = header(c) + (state.menu ? seasonMenu(c) : "") + body + footer(c);
+    app.innerHTML = header(c) + (state.menu ? seasonMenu(c) : "") + navBar(c) + body + footer(c);
     document.title = `FULka – ${c.cur.name}`;
     if (key) { const el = app.querySelector(key); if (el) el.focus({ preventScroll: true }); }
   }
@@ -624,8 +648,20 @@
     state.season = id;
     state.menu = false;
     state.open = undefined;
+    state.tab = null;
+    if (location.hash) history.pushState(null, "", location.pathname + location.search);
     render();
     window.scrollTo(0, 0);
+  }
+
+  // záložka je aj v adrese (#tabulka), takže sa dá poslať odkaz a funguje tlačidlo Späť
+  function pickTab(id) {
+    state.tab = id;
+    history.pushState(null, "", `#${id}`);
+    render();
+    // ak je lišta prilepená hore, obsah začne hneď pod ňou
+    const nav = app.querySelector(".nav");
+    if (nav && window.scrollY > nav.offsetTop) window.scrollTo(0, nav.offsetTop);
   }
 
   document.addEventListener("click", (e) => {
@@ -635,12 +671,14 @@
     if (act === "menu") { state.menu = !state.menu; render(); }
     else if (act === "season") pickSeason(el.dataset.id);
     else if (act === "home") { e.preventDefault(); pickSeason(null); }
+    else if (act === "tab") { e.preventDefault(); pickTab(el.dataset.id); }
     else if (act === "open") {
       const c = context();
       state.open = openId(c) === el.dataset.id ? null : el.dataset.id;
       render();
     }
   });
+  window.addEventListener("popstate", () => { state.tab = location.hash.slice(1) || null; render(); });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && state.menu) { state.menu = false; render(); }
   });

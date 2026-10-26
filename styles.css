@@ -14,6 +14,8 @@
   --fg-4: #5a5a5a;
   --moved: #ffb020;
   --live: #3ddc84;
+  --nav: #ffd400;
+  --nav-ink: #050505;
   --fc: "Saira Extra Condensed", "Saira", system-ui, sans-serif;
   --pad: clamp(16px, 2cqi, 24px);
   color-scheme: dark;
@@ -56,15 +58,22 @@ a { color: inherit; }
 .brand-name small { margin-top: 5px; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg-2); }
 .season-btn { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 14px; background: transparent; border: 1px solid var(--fg);
   transform: skewX(-10deg); font-family: var(--fc); font-weight: 800; font-size: 17px; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; cursor: pointer; }
-.season-btn[aria-expanded="true"], .nav-season[aria-expanded="true"] { background: var(--fg); color: var(--bg); }
+.season-btn[aria-expanded="true"] { background: var(--fg); color: var(--bg); }
 .dot { width: 9px; height: 9px; flex: none; }
 .chev { transition: transform 0.15s; }
 [aria-expanded="true"] > .chev, [aria-expanded="true"] .chev { transform: rotate(180deg); }
-.nav { margin-left: auto; display: flex; align-items: center; max-width: 100%; overflow-x: auto; }
-.nav a { padding: 12px 9px; color: var(--fg-2); text-decoration: none; white-space: nowrap; font-family: var(--fc); font-weight: 800; font-size: 20px; letter-spacing: 0.04em; text-transform: uppercase; }
-.nav a:first-child, .nav a:hover { color: var(--fg); }
-.nav-season { margin-left: 6px; min-height: 40px; padding: 0 14px; background: transparent; border: 1px solid var(--fg); font-family: var(--fc); font-weight: 800; font-size: 20px;
-  letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; cursor: pointer; clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); }
+/* žltá lišta so záložkami: väčšia, prilepená hore; vybraná záložka je čierna */
+.nav { position: sticky; top: 0; z-index: 20; background: var(--nav); color: var(--nav-ink); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35); }
+.nav-in { display: flex; align-items: center; gap: 4px; overflow-x: auto; scrollbar-width: none; padding-top: 8px; padding-bottom: 8px; }
+.nav-in::-webkit-scrollbar { display: none; }
+.nav a { flex: none; padding: 10px 18px; color: var(--nav-ink); text-decoration: none; white-space: nowrap; font-family: var(--fc); font-weight: 900;
+  font-size: clamp(22px, 2.4cqi, 30px); line-height: 1; letter-spacing: 0.04em; text-transform: uppercase; clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); }
+.nav a:hover { background: rgba(0, 0, 0, 0.12); }
+.nav a[aria-current="page"] { background: var(--nav-ink); color: var(--nav); }
+@container (max-width: 480px) {
+  .nav-in { gap: 2px; }
+  .nav a { padding: 9px 11px; font-size: 21px; }
+}
 
 /* ---------- Výber sezóny ---------- */
 .seasons { background: var(--card-2); border-bottom: 1px solid var(--line); }
