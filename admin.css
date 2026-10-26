@@ -168,7 +168,7 @@
 .a-sum { margin-top: auto; padding: 12px; background: var(--bg); border: 1px solid var(--line); }
 .a-sum b { display: block; margin-top: 4px; font-weight: 700; font-size: 16px; }
 .a-sum b.warn { color: var(--moved); }
-.a-changed { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px; background: rgba(255, 176, 32, 0.08); border: 1px solid var(--moved); }
+.a-changed { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px; background: rgba(255, 212, 0, 0.08); border: 1px solid var(--moved); }
 .a-changed > span { flex: 1 1 260px; font-size: 14px; color: #ffe2ad; }
 .a-changed strong { color: var(--fg); }
 .a-switch { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; background: transparent; color: var(--fg); border: 1px solid var(--moved); font-weight: 600; font-size: 13px; cursor: pointer; }

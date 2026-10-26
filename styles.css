@@ -12,7 +12,7 @@
   --fg-2: #bdbdbd;
   --fg-3: #9a9a9a;
   --fg-4: #5a5a5a;
-  --moved: #ffb020;
+  --moved: var(--nav);
   --live: #3ddc84;
   --nav: #ffd400;
   --nav-ink: #050505;

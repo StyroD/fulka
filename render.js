@@ -344,7 +344,7 @@
         <div class="round-body"><div class="round-title"><b>Kolo ${r.round}</b>${r.round === nextK ? '<span class="badge">Najbližšie</span>' : ""}</div>
           ${r.matches.map((m) => scheduleRow(m, c, next && next.id)).join("")}</div></div>`;
     });
-    const legend = '<span class="legend"><span><i aria-hidden="true" style="background:#FFB020"></i>presunutý</span><span><i aria-hidden="true" style="border:1px dashed #FFFFFF"></i>bez termínu</span></span>';
+    const legend = '<span class="legend"><span><i aria-hidden="true" style="background:var(--moved)"></i>presunutý</span><span><i aria-hidden="true" style="border:1px dashed #FFFFFF"></i>bez termínu</span></span>';
     return `<section id="rozpis" class="sec">${secHead("Rozpis", "", legend)}<div class="rounds">${rows.join("")}</div></section>`;
   }
 
