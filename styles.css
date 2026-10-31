@@ -64,15 +64,23 @@ a { color: inherit; }
 [aria-expanded="true"] > .chev, [aria-expanded="true"] .chev { transform: rotate(180deg); }
 /* žltá lišta so záložkami: väčšia, prilepená hore; vybraná záložka je čierna */
 .nav { position: sticky; top: 0; z-index: 20; background: var(--nav); color: var(--nav-ink); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35); }
-.nav-in { display: flex; align-items: center; gap: 4px; overflow-x: auto; scrollbar-width: none; padding-top: 8px; padding-bottom: 8px; }
-.nav-in::-webkit-scrollbar { display: none; }
+.nav-in { padding-top: 8px; padding-bottom: 8px; }
+.nav-list { display: flex; align-items: center; gap: 4px; }
 .nav a { flex: none; padding: 10px 18px; color: var(--nav-ink); text-decoration: none; white-space: nowrap; font-family: var(--fc); font-weight: 900;
   font-size: clamp(22px, 2.4cqi, 30px); line-height: 1; letter-spacing: 0.04em; text-transform: uppercase; clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); }
 .nav a:hover { background: rgba(0, 0, 0, 0.12); }
 .nav a[aria-current="page"] { background: var(--nav-ink); color: var(--nav); }
-@container (max-width: 480px) {
-  .nav-in { gap: 2px; }
-  .nav a { padding: 9px 11px; font-size: 21px; }
+.nav-toggle { display: none; }
+
+/* mobil: namiesto záložiek názov sekcie + Menu, zoznam sa rozbalí pod lištou */
+@container (max-width: 700px) {
+  .nav-toggle { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 48px; padding: 0; background: none; border: 0;
+    color: var(--nav-ink); font-family: var(--fc); font-weight: 900; text-transform: uppercase; cursor: pointer; }
+  .nav-cur { font-size: 28px; line-height: 1; letter-spacing: 0.04em; }
+  .nav-burger { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 2px solid var(--nav-ink); font-size: 18px; letter-spacing: 0.06em; }
+  .nav-list { display: none; flex-direction: column; align-items: stretch; gap: 2px; padding: 8px 0 4px; border-top: 2px solid var(--nav-ink); margin-top: 8px; }
+  .nav.open .nav-list { display: flex; }
+  .nav a { padding: 12px; font-size: 24px; clip-path: none; }
 }
 
 /* ---------- Výber sezóny ---------- */
