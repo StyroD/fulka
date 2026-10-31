@@ -163,10 +163,10 @@
     const cur = tabOf(c.cur);
     const links = tabs.map(([id, txt]) =>
       `<a href="#${id}" data-act="tab" data-id="${id}"${id === cur ? ' aria-current="page"' : ""}>${txt}</a>`).join("");
-    // na mobile sa namiesto záložiek ukáže názov sekcie a tlačidlo Menu, ktoré rozbalí zoznam
+    // na mobile sa namiesto záložiek ukáže názov sekcie a ikonka menu, ktorá rozbalí zoznam
     const icon = state.nav ? '<path d="M6 6l12 12M18 6L6 18"></path>' : '<path d="M4 7h16M4 12h16M4 17h16"></path>';
-    const toggle = `<button type="button" class="nav-toggle" data-act="nav" aria-expanded="${state.nav}" aria-controls="nav-list">
-      <span class="nav-cur">${tabs.find(([id]) => id === cur)[1]}</span><span class="nav-burger">${state.nav ? "Zavrieť" : "Menu"}
+    const toggle = `<button type="button" class="nav-toggle" data-act="nav" aria-expanded="${state.nav}" aria-controls="nav-list" aria-label="${state.nav ? "Zavrieť menu" : "Otvoriť menu"}">
+      <span class="nav-cur">${tabs.find(([id]) => id === cur)[1]}</span><span class="nav-burger">
       <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">${icon}</svg></span></button>`;
     return `<nav class="nav${state.nav ? " open" : ""}" aria-label="Hlavná navigácia"><div class="wrap nav-in">${toggle}<div class="nav-list" id="nav-list">${links}</div></div></nav>`;
   }

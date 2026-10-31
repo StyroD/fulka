@@ -65,7 +65,7 @@ Prepnutie iba na pozretie, bez ukladania: `?fotky=ano|nie`, `?rozlozenie=uzke|si
   Lonzi je s tým spokojný („presne tak, ako to chcem mať“) – nemeniť.
 - Navigácia: väčšia žltá lišta (`--nav`) prilepená hore pod hlavičkou; sekcie sú záložky – zobrazí sa vždy iba jedna (prebiehajúca sezóna predvolene Rozpis,
   archív Poradie). Banner najbližších zápasov / šampión iba na predvolenej záložke, aby ostatné začínali hneď obsahom.
-  Na mobile (do 700 px) je namiesto záložiek názov sekcie + tlačidlo Menu, ktoré rozbalí zoznam. „Presunutý“ (`--moved`) má rovnakú žltú ako lišta. Záložka je v adrese (`#tabulka`), funguje Späť. Vetva `Damian_contribution`, zatiaľ nie na `main`.
+  Na mobile (do 700 px) je namiesto záložiek názov sekcie + ikonka menu (hamburger, bez textu), ktorá rozbalí zoznam. „Presunutý“ (`--moved`) má rovnakú žltú ako lišta. Záložka je v adrese (`#tabulka`), funguje Späť. Vetva `Damian_contribution`, zatiaľ nie na `main`.
 - Rozloženie „úzke“: obsah max. 1000 px, kompaktné tabuľky, rozpis vycentrovaný, tímy 2×2. Mená a logá tímov v rozpise väčšie v oboch režimoch.
 - Fotky: bucket `hraci/<player_id>/full|head|face.webp?v=<čas>`. Hromadné nahratie v Tímy podľa mien súborov `<player_id>_full|_head|_face`.
   Jedna fotka → výrez hlavy a avatar sa vyrobia samé. Fotky kapitánov sú nahraté. Ukazujú sa pri kapitánoch v Tímoch a v bodovaní.
